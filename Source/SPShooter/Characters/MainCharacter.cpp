@@ -2,27 +2,29 @@
 
 
 #include "MainCharacter.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Create a camera boom (pulls in towards the character if there is a collision)
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 300.f;
+	CameraBoom->bUsePawnControlRotation = true;
+
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FollowCamera->bUsePawnControlRotation = false;
 }
 
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UE_LOG(LogTemp, Warning, TEXT("BeginPlay() called!"));
-
-	int32 myInt{ 42 };
-	UE_LOG(LogTemp, Warning, TEXT("int myInt: %d"), myInt);
-
-	float myFloat{ 3.14159f };
-	UE_LOG(LogTemp, Warning, TEXT("float myFloat: %f"), myFloat);
-
-	double myDouble{ 0.000756 };
-
+	
 }
 
 void AMainCharacter::Tick(float DeltaTime)

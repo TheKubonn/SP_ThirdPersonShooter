@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "MainCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class SPSHOOTER_API AMainCharacter : public ACharacter
 {
@@ -21,6 +24,14 @@ protected:
 
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr <USpringArmComponent> CameraBoom;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr <UCameraComponent> FollowCamera;
 
+public:
+	// Setters and getters
+	FORCEINLINE TObjectPtr <USpringArmComponent> GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE TObjectPtr <UCameraComponent> GetFollowCamera() const { return FollowCamera; }
 };
