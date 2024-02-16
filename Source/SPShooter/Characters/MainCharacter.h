@@ -57,6 +57,9 @@ private:
 	UParticleSystem* ImpactParticles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* BeamParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <UAnimMontage> HipFireMontage;
 
 public:
