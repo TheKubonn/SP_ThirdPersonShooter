@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class USoundBase;
 class UParticleSystem;
+class UAnimMontage;
 
 UCLASS()
 class SPSHOOTER_API AMainCharacter : public ACharacter
@@ -31,6 +32,7 @@ protected:
 	
 	// Called when the fire button (Left Mouse Button) is being pressed
 	void FireWeapon();
+	void PlayHipFireMontage(const FName& SectionName);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -50,6 +52,12 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* ImpactParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr <UAnimMontage> HipFireMontage;
 
 public:
 	// Setters and getters
