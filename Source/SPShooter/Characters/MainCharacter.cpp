@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -77,7 +78,10 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::FireWeapon()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Fire Weapon"));
+	if (FireSound)
+	{
+		UGameplayStatics::PlaySound2D(this, FireSound);
+	}
 }
 
 void AMainCharacter::BeginPlay()
