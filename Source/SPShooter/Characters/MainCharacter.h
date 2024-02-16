@@ -9,6 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class USoundBase;
+class UParticleSystem;
 
 UCLASS()
 class SPSHOOTER_API AMainCharacter : public ACharacter
@@ -46,6 +47,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* MuzzleFlash;
 
 public:
 	// Setters and getters
