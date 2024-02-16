@@ -22,6 +22,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -29,6 +33,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <UCameraComponent> FollowCamera;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float BaseTurnRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float BaseLookUpRate;
 
 public:
 	// Setters and getters
