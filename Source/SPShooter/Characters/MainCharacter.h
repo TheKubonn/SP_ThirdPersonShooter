@@ -34,6 +34,8 @@ protected:
 	void FireWeapon();
 	void PlayHipFireMontage(const FName& SectionName);
 
+	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <USpringArmComponent> CameraBoom;
