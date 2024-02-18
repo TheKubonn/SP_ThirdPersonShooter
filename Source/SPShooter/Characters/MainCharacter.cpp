@@ -25,7 +25,12 @@ AMainCharacter::AMainCharacter() :
 	HipTurnRate(90.f),
 	HipLookUpRate(90.f),
 	AimingTurnRate(20.f),
-	AimingLookUpRate(20.f)
+	AimingLookUpRate(20.f),
+	// Mouse Look sensitivity scale factors
+	MouseHipTurnRate(1.f),
+	MouseHipLookUpRate(1.f),
+	MouseAimingTurnRate(0.2f),
+	MouseAimingLookUpRate(0.2f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -64,6 +69,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMainCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AMainCharacter::Turn);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AMainCharacter::LookUp);
+	PlayerInputComponent->BindAxis(TEXT("TurnSensitivity"), this, &AMainCharacter::TurnSensitivity);
+	PlayerInputComponent->BindAxis(TEXT("LookUpSensitivity"), this, &AMainCharacter::LookUpSensitivity);
 	
 }
 
@@ -113,6 +120,34 @@ void AMainCharacter::Turn(float Value)
 void AMainCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void AMainCharacter::TurnSensitivity(float Value)
+{
+	float TurnScaleFactor;
+	if (bIsAiming)
+	{
+		TurnScaleFactor = MouseAimingTurnRate;
+	}
+	else
+	{
+		TurnScaleFactor = MouseHipTurnRate;
+	}
+	AddControllerYawInput(Value * TurnScaleFactor);
+}
+
+void AMainCharacter::LookUpSensitivity(float Value)
+{
+	float LookUpScaleFactor;
+	if (bIsAiming)
+	{
+		LookUpScaleFactor = MouseAimingLookUpRate;
+	}
+	else
+	{
+		LookUpScaleFactor = MouseHipLookUpRate;
+	}
+	AddControllerPitchInput(Value * LookUpScaleFactor);
 }
 
 void AMainCharacter::FireWeapon()
