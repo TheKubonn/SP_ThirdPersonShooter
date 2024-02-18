@@ -221,6 +221,9 @@ void AMainCharacter::FireWeapon()
 		*/
 	}
 	PlayHipFireMontage(FName("StartFire"));
+
+	// Start bullet fire timer for crosshair
+	StartCrosshairBulletFire();
 }
 
 void AMainCharacter::PlayHipFireMontage(const FName& SectionName)
@@ -244,7 +247,6 @@ bool AMainCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVe
 
 	// Get Screen space location of crosshairs
 	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
-	CrosshairLocation.Y -= 50.f;
 	FVector CrosshairWorldPosition;
 	FVector CrosshairWorldDirection;
 
@@ -353,7 +355,31 @@ void AMainCharacter::CalculateCrosshairSpread(float DeltaTime)
 		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
 	}
 
-	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor - CrosshairAimFactor;
+	// True 0.05 seconds after firing a weapon
+	if (bFiringBullet)
+	{
+		CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.3f, DeltaTime, 60.f);
+	}
+	else
+	{
+		CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 60.f);
+	}
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor - CrosshairAimFactor + CrosshairShootingFactor;
+}
+
+void AMainCharacter::StartCrosshairBulletFire()
+{
+	bFiringBullet = true;
+
+	GetWorldTimerManager().SetTimer(CrosshairShootTimer, this, &AMainCharacter::FinishCrosshairBulletFire, ShootTimeDuration);
+}
+
+void AMainCharacter::FinishCrosshairBulletFire()
+{
+	bFiringBullet = false;
+
+
 }
 
 float AMainCharacter::GetCrosshairSpreadMultiplier() const
