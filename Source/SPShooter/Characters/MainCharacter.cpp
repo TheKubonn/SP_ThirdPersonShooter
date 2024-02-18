@@ -30,7 +30,16 @@ AMainCharacter::AMainCharacter() :
 	MouseHipTurnRate(1.f),
 	MouseHipLookUpRate(1.f),
 	MouseAimingTurnRate(0.2f),
-	MouseAimingLookUpRate(0.2f)
+	MouseAimingLookUpRate(0.2f),
+	// Crosshair spread factors
+	CrosshairSpreadMultiplier(0.f),
+	CrosshairVelocityFactor(0.f),
+	CrosshairInAirFactor(0.f),
+	CrosshairAimFactor(0.f),
+	CrosshairShootingFactor(0.f),
+	// Bullet Fire timer variables
+	ShootTimeDuration(0.05f),
+	bFiringBullet(false)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -334,7 +343,17 @@ void AMainCharacter::CalculateCrosshairSpread(float DeltaTime)
 		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);
 	}
 
-	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor;
+	// Calculate crosshair aim factor
+	if (bIsAiming)
+	{
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.6f, DeltaTime, 30.f);
+	}
+	else
+	{
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
+	}
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor - CrosshairAimFactor;
 }
 
 float AMainCharacter::GetCrosshairSpreadMultiplier() const
