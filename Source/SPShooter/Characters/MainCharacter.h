@@ -47,6 +47,11 @@ protected:
 	void SetLookRates();
 
 	void CalculateCrosshairSpread(float DeltaTime);
+	
+	void StartCrosshairBulletFire();
+
+	UFUNCTION()
+	void FinishCrosshairBulletFire();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -140,6 +145,10 @@ private:
 	// Shooting Component for crosshair spread
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
 	float CrosshairShootingFactor;
+
+	float ShootTimeDuration;
+	bool bFiringBullet;
+	FTimerHandle CrosshairShootTimer;
 
 public:
 	// Setters and getters
