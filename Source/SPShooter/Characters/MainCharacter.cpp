@@ -10,16 +10,31 @@
 #include "DrawDebugHelpers.h"
 #include "Particles/ParticleSystemComponent.h"
 
-AMainCharacter::AMainCharacter()
+AMainCharacter::AMainCharacter() :
+	// Setting up default values
+	bIsAiming(false),
+	// Camera FOV values
+	CameraDefaultFOV(0.f), // Set in BeginPlay
+	CameraZoomedFOV(35.f),
+	CameraCurrentFOV(0.f),
+	ZoomInterpSpeed(20.f),
+	// Base rates for turning/looking up
+	BaseTurnRate(45.f),
+	BaseLookUpRate(45.f),
+	// Turn Rates For Aiming/NOT Aiming
+	HipTurnRate(90.f),
+	HipLookUpRate(90.f),
+	AimingTurnRate(20.f),
+	AimingLookUpRate(20.f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create a camera boom (pulls in towards the character if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.f;
+	CameraBoom->TargetArmLength = 200.f;
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -42,12 +57,32 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("FireButton"), IE_Pressed, this, &AMainCharacter::FireWeapon);
+	PlayerInputComponent->BindAction(TEXT("AimingButton"), IE_Pressed, this, &AMainCharacter::AimingButtonPressed);
+	PlayerInputComponent->BindAction(TEXT("AimingButton"), IE_Released, this, &AMainCharacter::AimingButtonReleased);
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMainCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AMainCharacter::Turn);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AMainCharacter::LookUp);
 	
+}
+
+void AMainCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (FollowCamera)
+	{
+		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+		CameraCurrentFOV = CameraDefaultFOV;
+	}
+}
+
+void AMainCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	CameraInterpZoom(DeltaTime);
+	SetLookRates();
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -202,16 +237,44 @@ bool AMainCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVe
 	return false;
 }
 
-void AMainCharacter::BeginPlay()
+void AMainCharacter::AimingButtonPressed()
 {
-	Super::BeginPlay();
-	
-	
+	bIsAiming = true;
 }
 
-void AMainCharacter::Tick(float DeltaTime)
+void AMainCharacter::AimingButtonReleased()
 {
-	Super::Tick(DeltaTime);
-
+	bIsAiming = false;
 }
+
+void AMainCharacter::CameraInterpZoom(float DeltaTime)
+{
+	// Set current camera FOV
+	if (bIsAiming)
+	{
+		// Interpolate to zoomed FOV
+		CameraCurrentFOV = FMath::FInterpTo(CameraCurrentFOV, CameraZoomedFOV, DeltaTime, ZoomInterpSpeed);
+	}
+	else
+	{
+		// Interpolate to default FOV
+		CameraCurrentFOV = FMath::FInterpTo(CameraCurrentFOV, CameraDefaultFOV, DeltaTime, ZoomInterpSpeed);
+	}
+	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
+}
+
+void AMainCharacter::SetLookRates()
+{
+	if (bIsAiming)
+	{
+		BaseTurnRate = AimingTurnRate;
+		BaseLookUpRate = AimingLookUpRate;
+	}
+	else
+	{
+		BaseTurnRate = HipTurnRate;
+		BaseLookUpRate = HipLookUpRate;
+	}
+}
+
 

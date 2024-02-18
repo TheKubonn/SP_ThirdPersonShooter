@@ -33,6 +33,8 @@ void UMainAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		{
 			LastMovementOffsetYaw = MovementOffsetYaw;
 		}
+
+		bIsAiming = MainCharacter->GetAiming();
 	}
 }
 
