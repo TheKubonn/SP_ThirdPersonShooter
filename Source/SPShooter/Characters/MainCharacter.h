@@ -53,6 +53,14 @@ protected:
 	UFUNCTION()
 	void FinishCrosshairBulletFire();
 
+	void FireButtonPressed();
+	void FireButtonReleased();
+	
+	void StartFireTimer();
+
+	UFUNCTION()
+	void AutoFireReset();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <USpringArmComponent> CameraBoom;
@@ -149,6 +157,16 @@ private:
 	float ShootTimeDuration;
 	bool bFiringBullet;
 	FTimerHandle CrosshairShootTimer;
+
+	// Left mouse button or right console trigger pressed
+	bool bFireButtonPressed;
+
+	// True when we can fire. False when waiting for the timer
+	bool bShouldFire;
+
+	// Rate of automatic gun fire
+	float AutomaticFireRate;
+	FTimerHandle AutoFireTimer;
 
 public:
 	// Setters and getters

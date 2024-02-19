@@ -39,7 +39,11 @@ AMainCharacter::AMainCharacter() :
 	CrosshairShootingFactor(0.f),
 	// Bullet Fire timer variables
 	ShootTimeDuration(0.05f),
-	bFiringBullet(false)
+	bFiringBullet(false),
+	// Automatic gun fire variables
+	AutomaticFireRate(0.1f),
+	bShouldFire(true),
+	bFireButtonPressed(false)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -70,7 +74,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	check(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("FireButton"), IE_Pressed, this, &AMainCharacter::FireWeapon);
+	PlayerInputComponent->BindAction(TEXT("FireButton"), IE_Pressed, this, &AMainCharacter::FireButtonPressed);
+	PlayerInputComponent->BindAction(TEXT("FireButton"), IE_Released, this, &AMainCharacter::FireButtonReleased);
 	PlayerInputComponent->BindAction(TEXT("AimingButton"), IE_Pressed, this, &AMainCharacter::AimingButtonPressed);
 	PlayerInputComponent->BindAction(TEXT("AimingButton"), IE_Released, this, &AMainCharacter::AimingButtonReleased);
 
@@ -380,6 +385,36 @@ void AMainCharacter::FinishCrosshairBulletFire()
 	bFiringBullet = false;
 
 
+}
+
+void AMainCharacter::FireButtonPressed()
+{
+	bFireButtonPressed = true;
+	StartFireTimer();
+}
+
+void AMainCharacter::FireButtonReleased()
+{
+	bFireButtonPressed = false;
+}
+
+void AMainCharacter::StartFireTimer()
+{
+	if (bShouldFire)
+	{
+		FireWeapon();
+		bShouldFire = false;
+		GetWorldTimerManager().SetTimer(AutoFireTimer, this, &AMainCharacter::AutoFireReset, AutomaticFireRate);
+	}
+}
+
+void AMainCharacter::AutoFireReset()
+{
+	bShouldFire = true;
+	if (bFireButtonPressed)
+	{
+		StartFireTimer();
+	}
 }
 
 float AMainCharacter::GetCrosshairSpreadMultiplier() const
