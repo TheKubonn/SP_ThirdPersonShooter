@@ -61,6 +61,9 @@ protected:
 	UFUNCTION()
 	void AutoFireReset();
 
+	// Line trace for items under the crosshair
+	bool TraceUnderCrosshair(FHitResult& OutHitResult, FVector& OutHitLocation);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <USpringArmComponent> CameraBoom;

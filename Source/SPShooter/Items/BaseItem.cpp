@@ -14,6 +14,8 @@ ABaseItem::ABaseItem()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	CollisionBox->SetupAttachment(ItemMesh);
+	CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 
 	PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
 	PickupWidget->SetupAttachment(RootComponent);
@@ -23,6 +25,8 @@ void ABaseItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Hide pickup widget
+	PickupWidget->SetVisibility(false);
 }
 
 void ABaseItem::Tick(float DeltaTime)

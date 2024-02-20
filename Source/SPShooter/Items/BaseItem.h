@@ -37,6 +37,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <UWidgetComponent> PickupWidget;
 public:	
-	
+	FORCEINLINE TObjectPtr <UWidgetComponent> GetPickupWidget() const { return PickupWidget; }
 
 };
