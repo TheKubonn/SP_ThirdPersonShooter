@@ -3,6 +3,7 @@
 
 #include "BaseItem.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 
 ABaseItem::ABaseItem()
 {
@@ -13,6 +14,9 @@ ABaseItem::ABaseItem()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	CollisionBox->SetupAttachment(ItemMesh);
+
+	PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
+	PickupWidget->SetupAttachment(RootComponent);
 }
 
 void ABaseItem::BeginPlay()
