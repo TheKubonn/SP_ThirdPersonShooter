@@ -45,6 +45,12 @@ private:
 	// Enables item tracing when overlapped
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <USphereComponent> AreaSphere;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	FString ItemName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	int32 ItemCount;
 public:	
 	FORCEINLINE TObjectPtr <UWidgetComponent> GetPickupWidget() const { return PickupWidget; }
 

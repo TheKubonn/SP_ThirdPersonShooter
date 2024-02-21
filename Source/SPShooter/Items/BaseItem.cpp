@@ -7,7 +7,9 @@
 #include "Components/SphereComponent.h"
 #include "SPShooter/Characters/MainCharacter.h"
 
-ABaseItem::ABaseItem()
+ABaseItem::ABaseItem() :
+	ItemName(FString("Default")),
+	ItemCount(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
