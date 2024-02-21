@@ -11,6 +11,7 @@ class UCameraComponent;
 class USoundBase;
 class UParticleSystem;
 class UAnimMontage;
+class ABaseItem;
 
 UCLASS()
 class SPSHOOTER_API AMainCharacter : public ACharacter
@@ -63,6 +64,8 @@ protected:
 
 	// Line trace for items under the crosshair
 	bool TraceUnderCrosshair(FHitResult& OutHitResult, FVector& OutHitLocation);
+
+	void TraceForItems();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -171,12 +174,24 @@ private:
 	float AutomaticFireRate;
 	FTimerHandle AutoFireTimer;
 
+	// True if we should trace every frame for items
+	bool bShouldTraceForItems;
+
+	// Number of overlapped items
+	int8 OverlappedItemCount;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
+	ABaseItem* TraceHitItemLastFrame;
+
 public:
 	// Setters and getters
 	FORCEINLINE TObjectPtr <USpringArmComponent> GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE TObjectPtr <UCameraComponent> GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool GetAiming() const { return bIsAiming; }
+	FORCEINLINE int8 GetOverlappedItemCount() const { return OverlappedItemCount; }
 
 	UFUNCTION(BlueprintCallable)
 	float GetCrosshairSpreadMultiplier() const;
+
+	void IncrementOverlappedItemCount(int8 Amount);
 };

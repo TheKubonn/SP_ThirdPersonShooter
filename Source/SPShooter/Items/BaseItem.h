@@ -9,6 +9,7 @@
 class UBoxComponent;
 class USkeletalMeshComponent;
 class UWidgetComponent;
+class USphereComponent;
 
 UCLASS()
 class SPSHOOTER_API ABaseItem : public AActor
@@ -23,7 +24,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
+	UFUNCTION()
+	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 private:
 	// Box collider for line trace that will show HUD widget
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
@@ -36,6 +41,10 @@ private:
 	// Pop up widget for when the player looks at the item
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr <UWidgetComponent> PickupWidget;
+
+	// Enables item tracing when overlapped
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr <USphereComponent> AreaSphere;
 public:	
 	FORCEINLINE TObjectPtr <UWidgetComponent> GetPickupWidget() const { return PickupWidget; }
 
