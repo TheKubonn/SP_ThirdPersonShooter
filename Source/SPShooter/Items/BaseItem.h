@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SPShooter/EnumTypes/EnumTypes.h"
 #include "BaseItem.generated.h"
 
 class UBoxComponent;
@@ -29,6 +30,9 @@ protected:
 	
 	UFUNCTION()
 	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	// Sets the ActiveStars array of bools based on rarity
+	void SetActiveStars();
 private:
 	// Box collider for line trace that will show HUD widget
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
@@ -49,8 +53,16 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FString ItemName;
 
+	// Item count for ammo etc.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	int32 ItemCount;
+
+	// Item rarity determines number of stars in pickup widget
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	EItemRarity ItemRarity;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	TArray <bool> ActiveStars;
 public:	
 	FORCEINLINE TObjectPtr <UWidgetComponent> GetPickupWidget() const { return PickupWidget; }
 
